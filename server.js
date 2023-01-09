@@ -1,4 +1,8 @@
 const os = require('os');
-console.log(os.type());
-console.log(os.version());
-console.log(os.homedir());
+
+const fs = require('fs');
+
+fs.readFile('./data/starter.txt', 'utf-8', (err, data) =>{
+    if (err) throw err;
+    console.log(data);
+})
