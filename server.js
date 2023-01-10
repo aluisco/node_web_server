@@ -7,8 +7,7 @@ const logEvents = require('./logEvents');
 const EventEmitter = require('events');
 class Emitter extends EventEmitter{};
 const myEmitter = new Emitter();
-// myEmitter.on('log', (msg) => logEvents(msg));
-// myEmitter.emit('log', 'Log event emitted!');
+myEmitter.on('log', (msg, fileName) => logEvents(msg, fileName));
 
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || 'localhost';
@@ -30,7 +29,7 @@ const serveFile = async (filePath, contentType, response) => {
         );
     } catch (err) {
         console.log(err);
-        myEmitter.emit('log', `${err.name}: ${err.message}`, 'errLog.txt');
+        myEmitter.emit('log', `${err.name}: ${err.message}`, 'errLog.log');
         response.statusCode = 500;
         response.end();
     }
@@ -38,6 +37,7 @@ const serveFile = async (filePath, contentType, response) => {
 
 const server = http.createServer((req, res)=>{
     console.log(req.url, req.method);
+    myEmitter.emit('log', `${req.url}\t${req.method}`, 'reqLog.log');
 
     const extension = path.extname(req.url);
 
